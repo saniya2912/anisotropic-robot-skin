@@ -1,0 +1,41 @@
+<mujoco model="skin_deformable">
+  <!-- More stable settings for deformables -->
+  <option timestep="0.0002" gravity="0 0 -9.81" integrator="implicitfast"/>
+
+  <worldbody>
+    <geom type="plane" size="5 5 0.1" rgba="0.9 0.9 0.9 1"/>
+
+    <!-- Lower the start height a bit to reduce initial impulses -->
+    <body name="skin" pos="0 0 0.1">
+      <!-- IMPORTANT:
+           Use a rescaled OBJ (mm -> m) if your CAD export was in mm.
+           Create it with:
+             python scripts/rescale_obj.py --in models/assets/skin.obj --out models/assets/skin_m.obj --scale 0.001
+      -->
+      <flexcomp name="skinflex" type="mesh" file="assets/skin_m.obj" mass="1.0">
+
+        <!-- Start gentler; you can increase young later once stable -->
+        <elasticity
+          young="5e4"
+          poisson="0.30"
+          damping="0.20"
+          thickness="0.001"
+          elastic2d="both"/>
+
+        <!-- Stronger numerical damping helps kill high-frequency blow-ups -->
+        <edge damping="5.0"/>
+
+        <!-- Slightly softer contact -->
+        <contact selfcollide="none" solimp="0.95 0.99 0.001" solref="0.02 1"/>
+
+        <!-- Optional: pin a few vertices to avoid free-flying instability
+             (remove if you truly want it free) -->
+        <!--
+        <pin id="0"/>
+        <pin id="1"/>
+        <pin id="2"/>
+        -->
+      </flexcomp>
+    </body>
+  </worldbody>
+</mujoco>

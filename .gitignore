@@ -1,0 +1,21 @@
+# virtual environments
+snakeskin_venv/
+.venv/
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# mujoco / outputs
+*.mp4
+*.gif
+*.log
+renders/
+outputs/
+
+# os / ide
+.DS_Store
+.vscode/
+.idea/

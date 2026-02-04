@@ -1,0 +1,26 @@
+<mujoco model="skin_crosssection">
+  <option timestep="0.002" gravity="0 0 -9.81"/>
+
+  <asset>
+    <!-- STL is likely in mm → scale to meters -->
+    <mesh name="skin_mesh"
+          file="assets/skin_crosssection.stl"
+          scale="0.001 0.001 0.001"/>
+  </asset>
+
+  <worldbody>
+    <!-- ground -->
+    <geom type="plane" size="5 5 0.1" rgba="0.9 0.9 0.9 1"/>
+
+    <!-- skin section -->
+    <body name="skin_section" pos="0 0 0.15">
+      <freejoint/>
+
+      <geom type="mesh"
+            mesh="skin_mesh"
+            rgba="0.2 0.6 0.9 1"
+            density="300"
+            friction="1.0 0.01 0.001"/>
+    </body>
+  </worldbody>
+</mujoco>
