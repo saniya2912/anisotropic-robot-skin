@@ -1,0 +1,66 @@
+<mujoco model="quarter_elliptic_laminated_clean">
+  <option timestep="0.001" gravity="0 0 -9.81" integrator="implicitfast"/>
+  <compiler angle="radian" autolimits="true"/>
+
+  <default>
+    <geom friction="1 0.01 0.001"
+          solref="0.01 1"
+          solimp="0.95 0.99 0.001"/>
+    <joint damping="0.001" limited="true" range="-1.2 1.2"/>
+  </default>
+
+  <worldbody>
+
+    <geom name="ground" type="plane"
+          size="2 2 0.1" rgba="0.95 0.95 0.95 1"/>
+
+    <!-- Base body without visible geometry -->
+    <body name="base" pos="0 0 0.03">
+
+      <!-- LEAF 1 -->
+      <body name="leaf1" pos="0 0 0.000">
+        <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+        <geom type="box"
+              pos="0.008 0 0"
+              size="0.008 0.004 0.0006"
+              rgba="0.2 0.6 0.9 1"/>
+      </body>
+
+      <!-- LEAF 2 -->
+      <body name="leaf2" pos="0 0 0.0012">
+        <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+        <geom type="box"
+              pos="0.006 0 0"
+              size="0.006 0.004 0.0006"
+              rgba="0.25 0.65 0.95 1"/>
+      </body>
+
+      <!-- LEAF 3 -->
+      <body name="leaf3" pos="0 0 0.0024">
+        <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+        <geom type="box"
+              pos="0.004 0 0"
+              size="0.004 0.004 0.0006"
+              rgba="0.3 0.7 1 1"/>
+      </body>
+
+      <!-- LEAF 4 -->
+      <body name="leaf4" pos="0 0 0.0036">
+        <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+        <geom type="box"
+              pos="0.002 0 0"
+              size="0.002 0.004 0.0006"
+              rgba="0.35 0.75 1 1"/>
+
+        <site name="tip_site" pos="0.002 0 0"
+              size="0.001" rgba="1 0 0 1"/>
+      </body>
+
+    </body>
+
+  </worldbody>
+</mujoco>

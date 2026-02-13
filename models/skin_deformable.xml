@@ -1,42 +1,54 @@
-<mujoco model="skin_crosssection_deformable">
-  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast"/>
+<mujoco model="skin_spring_test_servo">
+  <option timestep="0.0005"
+          gravity="0 0 0"
+          integrator="implicitfast"
+          iterations="300"
+          tolerance="1e-10"/>
 
   <worldbody>
-    <!-- ground -->
-    <geom name="ground" type="plane" size="5 5 0.1" rgba="0.9 0.9 0.9 1"
-          friction="1.0 0.01 0.001"/>
+    <!-- Bottom plate fixed -->
+    <body name="bottom" pos="0 0 0.00">
+      <geom name="bottom_geom" type="box" size="0.08 0.08 0.01"
+            rgba="0.2 0.2 0.2 1"
+            contype="1" conaffinity="1"
+            margin="0.002"
+            solref="0.05 1" solimp="0.95 0.99 0.001"/>
+    </body>
 
-    <!-- deformable skin (soft body) -->
-    <body name="skin_section" pos="0 0 0.20">
-  <freejoint/>
+    <!-- Deformable sample fixed in world frame -->
+    <body name="skin_section" pos="0 0 0.03">
+      <inertial pos="0 0 0" mass="1e-4" diaginertia="1e-8 1e-8 1e-8"/>
 
-  <!-- IMPORTANT: in your MuJoCo build, inertial requires pos -->
-  <inertial pos="0 0 0" mass="1e-4" diaginertia="1e-8 1e-8 1e-8"/>
+      <flexcomp name="skinflex" type="mesh" file="assets/skin_scaled.obj" mass="0.05">
+        <!-- start soft + damped; ramp young later -->
+        <elasticity young="3e4" poisson="0.30" damping="0.20"
+                    thickness="0.002" elastic2d="both"/>
 
-  <flexcomp name="skinflex" type="mesh" file="assets/skin_scaled.obj" mass="0.05">
-    <elasticity
-      young="5e5"
-      poisson="0.30"
-      damping="0.02"
-      thickness="0.002"
-      elastic2d="both"/>
-    <contact selfcollide="none" solimp="0.95 0.99 0.001" solref="0.01 1"/>
-    <edge damping="1.0"/>
-  </flexcomp>
-</body>
+        <!-- this is important for stability; prevents some inversions -->
+        <contact internal="true" selfcollide="none"
+                 solref="0.05 1" solimp="0.95 0.99 0.001"
+                 margin="0.001"/>
+        <edge damping="3.0"/>
+      </flexcomp>
+    </body>
 
-    <!-- compression plate -->
-    <body name="plate" pos="0 0 0.32">
-      <joint name="plate_slide" type="slide" axis="0 0 -1" limited="true" range="0 0.12"/>
-      <geom name="plate_geom" type="box" size="0.06 0.06 0.01"
-            rgba="0.2 0.2 0.2 1" density="800"
-            friction="1.0 0.01 0.001"/>
+    <!-- Top plate: dynamic body with slide joint -->
+    <body name="top" pos="0 0 0.075">
+      <!-- axis is -Z so increasing q moves DOWN -->
+      <joint name="top_slide" type="slide" axis="0 0 -1" limited="true" range="0 0.04"/>
+
+      <geom name="top_geom" type="box" size="0.08 0.08 0.01"
+            rgba="0.2 0.2 0.2 1"
+            contype="1" conaffinity="1"
+            margin="0.002"
+            solref="0.05 1" solimp="0.95 0.99 0.001"/>
     </body>
   </worldbody>
 
-  <!-- push plate down/up with a position servo -->
   <actuator>
-    <position name="plate_servo" joint="plate_slide" kp="2000"/>
+    <!-- Built-in position servo (you set target only; no PID code) -->
+    <position name="top_servo" joint="top_slide"
+              kp="300" kv="30"
+              ctrllimited="true" ctrlrange="0 0.04"/>
   </actuator>
-
 </mujoco>

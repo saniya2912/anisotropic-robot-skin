@@ -8,61 +8,54 @@ XML_PATH = "models/skin_deformable.xml"
 def main():
     model = mujoco.MjModel.from_xml_path(XML_PATH)
     data = mujoco.MjData(model)
-
-    # --- Find actuator and joint by name (robust) ---
-    act_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, "plate_servo")
-    if act_id < 0:
-        raise RuntimeError(
-            "Actuator 'plate_servo' not found. "
-            "Make sure your XML actuator has name='plate_servo'."
-        )
-
-    j_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "plate_slide")
-    if j_id < 0:
-        raise RuntimeError("Joint 'plate_slide' not found. Check your XML joint name.")
-
-    qpos_adr = model.jnt_qposadr[j_id]
-    z0 = float(data.qpos[qpos_adr])
-
-    # How far to compress (meters)
-    z_down = 0.08
-    zmin = max(0.0, z0 - z_down)
-
     dt = model.opt.timestep
 
-    # Smooth cyclic motion parameters
-    period = 2.5  # seconds per full down-up cycle
-    omega = 2.0 * np.pi / period
+    act_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, "top_servo")
+    if act_id < 0:
+        raise RuntimeError("Actuator 'top_servo' not found. Check XML.")
 
-    # --- Launch viewer ---
+    # gentle squeeze range in joint coords (0..0.04)
+    q_start = 0.000   # plate up
+    q_end   = 0.020   # squeeze down 2cm (adjust later)
+
+    # go slow (quasi-static)
+    t_down, t_hold, t_up = 3.0, 0.5, 3.0
+    n_down = int(t_down / dt)
+    n_hold = int(t_hold / dt)
+    n_up   = int(t_up / dt)
+
+    def ease(a, b, n):
+        s = np.linspace(0, 1, n)
+        s = 0.5 * (1 - np.cos(np.pi * s))
+        return (1 - s) * a + s * b
+
+    traj = []
+    traj += list(ease(q_start, q_end, n_down))
+    traj += [q_end] * n_hold
+    traj += list(ease(q_end, q_start, n_up))
+    traj += [q_start] * n_hold
+
     with mujoco.viewer.launch_passive(model, data) as viewer:
-        viewer.cam.distance = 0.5
-        viewer.cam.lookat[:] = [0.0, 0.0, 0.12]
+        viewer.cam.distance = 0.7
+        viewer.cam.lookat[:] = [0.0, 0.0, 0.05]
         viewer.cam.elevation = -25
         viewer.cam.azimuth = 90
 
-        t0_wall = time.time()
-        step = 0
-
-        while viewer.is_running():
-            t = time.time() - t0_wall
-
-            # Sinusoid in [0, 1] then map to [z0, zmin]
-            s = 0.5 * (1.0 - np.cos(omega * t))  # 0 -> 1 -> 0
-            target = (1.0 - s) * z0 + s * zmin
-
-            # Position servo target
-            data.ctrl[act_id] = float(target)
-
+        # settle
+        for _ in range(int(0.5 / dt)):
+            data.ctrl[act_id] = q_start
             mujoco.mj_step(model, data)
             viewer.sync()
-
-            # Optional: print occasionally
-            if step % int(0.5 / dt) == 0:
-                print(f"t={t:5.2f}s  plate_target={target: .4f}  plate_qpos={data.qpos[qpos_adr]: .4f}")
-
-            step += 1
             time.sleep(dt)
+
+        while viewer.is_running():
+            for q in traj:
+                if not viewer.is_running():
+                    break
+                data.ctrl[act_id] = float(q)
+                mujoco.mj_step(model, data)
+                viewer.sync()
+                time.sleep(dt)
 
 if __name__ == "__main__":
     main()
