@@ -6,66 +6,59 @@ import mujoco.viewer
 XML_PATH = "models/leafspring.xml"
 
 def main():
-
     model = mujoco.MjModel.from_xml_path(XML_PATH)
     data  = mujoco.MjData(model)
-
     dt = model.opt.timestep
 
-    # -----------------------------
-    # Locate tip body
-    # -----------------------------
-    body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "leaf4")
+    # Apply force to the longest leaf body
+    body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "leaf1")
     if body_id < 0:
-        raise RuntimeError("Body 'leaf4' not found.")
+        raise RuntimeError("Body 'leaf1' not found (longest leaf).")
 
-    # Locate tip site
+    # Measure deflection at the tip site (must be added to leaf1 in XML)
     site_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_SITE, "tip_site")
     if site_id < 0:
-        raise RuntimeError("Site 'tip_site' not found.")
+        raise RuntimeError(
+            "Site 'tip_site' not found. Add <site name='tip_site' pos='0.016 0 0' ...> inside leaf1."
+        )
 
-    # Initial tip height
     mujoco.mj_forward(model, data)
-    z_initial = data.site_xpos[site_id][2]
+    z_initial = float(data.site_xpos[site_id][2])
+    x_initial = float(data.site_xpos[site_id][0])
 
-    print("Initial tip height:", z_initial)
+    print("Initial tip position:", data.site_xpos[site_id])
 
-    # -----------------------------
-    # Apply constant downward force
-    # -----------------------------
-    Fz = 1  # 0.05 N downward (small load for mm-scale system)
+    # Downward point load
+    Fz = 0.5  # N (increase if you want more visible deflection)
 
     settle_time = 3.0
     steps = int(settle_time / dt)
 
     with mujoco.viewer.launch_passive(model, data) as viewer:
-
-        viewer.cam.distance = 0.05
-        viewer.cam.lookat[:] = [0.01, 0.0, 0.03]
+        viewer.cam.distance = 0.08
+        viewer.cam.lookat[:] = [0.008, 0.0, 0.03]
         viewer.cam.elevation = -20
         viewer.cam.azimuth = 90
 
-        for i in range(steps):
+        for _ in range(steps):
+            data.xfrc_applied[:] = 0.0
 
-            # Clear previous forces
-            data.xfrc_applied[:] = 0
-
-            # Apply vertical force to tip body
+            # Apply force at the COM of leaf1 (MuJoCo API limitation)
+            # This is fine for now because we measure tip deflection.
             data.xfrc_applied[body_id, 2] = Fz
 
             mujoco.mj_step(model, data)
             viewer.sync()
             time.sleep(dt)
 
-        # Measure final deflection
-        z_final = data.site_xpos[site_id][2]
+        mujoco.mj_forward(model, data)
+        z_final = float(data.site_xpos[site_id][2])
         delta = z_initial - z_final
 
-        print("Final tip height:", z_final)
-        print("Deflection (m):", delta)
-        print("Deflection (mm):", delta * 1000)
+        print("Final tip position:", data.site_xpos[site_id])
+        print("Deflection (mm):", delta * 1000.0)
 
-        # Hold final state
+        # Hold
         while viewer.is_running():
             viewer.sync()
             time.sleep(dt)
