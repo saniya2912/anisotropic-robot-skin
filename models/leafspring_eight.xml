@@ -1,0 +1,109 @@
+<mujoco model="distributed_cantilever_beam">
+
+  <option timestep="0.001" gravity="0 0 -9.81" integrator="implicitfast"/>
+  <compiler angle="radian"/>
+
+  <default>
+    <geom friction="1 0.01 0.001"/>
+    <joint damping="0.01"/>
+  </default>
+
+  <worldbody>
+
+    <geom type="plane" size="2 2 0.1" rgba="0.95 0.95 0.95 1"/>
+
+    <body name="base" pos="0 0 0.03">
+
+      <!-- FIRST SEGMENT -->
+      <body name="seg1" pos="0 0 0">
+        <joint name="j1" type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+        <geom type="box"
+              pos="0.0009375 0 0"
+              size="0.0009375 0.004 0.0005"
+              rgba="0.2 0.6 0.9 1"/>
+
+        <!-- SEG2 -->
+        <body name="seg2" pos="0.001875 0 0">
+          <joint name="j2" type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+          <geom type="box"
+                pos="0.0009375 0 0"
+                size="0.0009375 0.004 0.0005"
+                rgba="0.25 0.65 0.95 1"/>
+
+          <!-- SEG3 -->
+          <body name="seg3" pos="0.001875 0 0">
+            <joint name="j3" type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+            <geom type="box"
+                  pos="0.0009375 0 0"
+                  size="0.0009375 0.004 0.0005"
+                  rgba="0.3 0.7 1 1"/>
+
+            <!-- SEG4 -->
+            <body name="seg4" pos="0.001875 0 0">
+              <joint name="j4" type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+              <geom type="box"
+                    pos="0.0009375 0 0"
+                    size="0.0009375 0.004 0.0005"
+                    rgba="0.35 0.75 1 1"/>
+
+              <!-- SEG5 -->
+              <body name="seg5" pos="0.001875 0 0">
+                <joint name="j5" type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+                <geom type="box"
+                      pos="0.0009375 0 0"
+                      size="0.0009375 0.004 0.0005"
+                      rgba="0.4 0.8 1 1"/>
+
+                <!-- SEG6 -->
+                <body name="seg6" pos="0.001875 0 0">
+                  <joint name="j6" type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+                  <geom type="box"
+                        pos="0.0009375 0 0"
+                        size="0.0009375 0.004 0.0005"
+                        rgba="0.45 0.85 1 1"/>
+
+                  <!-- SEG7 -->
+                  <body name="seg7" pos="0.001875 0 0">
+                    <joint name="j7" type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+                    <geom type="box"
+                          pos="0.0009375 0 0"
+                          size="0.0009375 0.004 0.0005"
+                          rgba="0.5 0.9 1 1"/>
+
+                    <!-- SEG8 -->
+                    <body name="seg8" pos="0.001875 0 0">
+                      <joint name="j8" type="hinge" axis="0 1 0" stiffness="0.02"/>
+
+                      <geom type="box"
+                            pos="0.0009375 0 0"
+                            size="0.0009375 0.004 0.0005"
+                            rgba="0.55 0.95 1 1"/>
+
+                      <!-- TIP -->
+                      <body name="tip" pos="0.001875 0 0">
+                        <geom type="sphere" size="0.0008"
+                              rgba="1 0 0 0.8"
+                              contype="0" conaffinity="0"/>
+                        <site name="tip_site" pos="0 0 0"
+                              size="0.001" rgba="1 0 0 1"/>
+                      </body>
+
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+
+    </body>
+  </worldbody>
+</mujoco>

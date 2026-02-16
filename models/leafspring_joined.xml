@@ -1,0 +1,76 @@
+<mujoco model="quarter_elliptic_laminated_clean">
+
+  <option timestep="0.001" gravity="0 0 -9.81" integrator="implicitfast"/>
+  <compiler angle="radian" autolimits="true"/>
+
+  <default>
+    <geom friction="1 0.01 0.001"
+          solref="0.01 1"
+          solimp="0.95 0.99 0.001"/>
+    <joint damping="0.01" limited="true" range="-1.2 1.2"/>
+  </default>
+
+  <worldbody>
+
+    <geom name="ground" type="plane"
+          size="2 2 0.1" rgba="0.95 0.95 0.95 1"/>
+
+    <!-- BASE -->
+    <body name="base" pos="0 0 0.03">
+
+      <!-- SINGLE BENDING DOF -->
+      <body name="laminated_beam" pos="0 0 0">
+        <joint name="beam_hinge"
+               type="hinge"
+               axis="0 1 0"
+               stiffness="0.002"/>
+
+        <!-- LONGEST LEAF -->
+        <geom name="leaf1_geom"
+              type="box"
+              pos="0.008 0 0"
+              size="0.008 0.004 0.0006"
+              rgba="0.2 0.6 0.9 1"/>
+
+        <!-- LEAF 2 -->
+        <geom name="leaf2_geom"
+              type="box"
+              pos="0.006 0 0.0012"
+              size="0.006 0.004 0.0006"
+              rgba="0.25 0.65 0.95 1"/>
+
+        <!-- LEAF 3 -->
+        <geom name="leaf3_geom"
+              type="box"
+              pos="0.004 0 0.0024"
+              size="0.004 0.004 0.0006"
+              rgba="0.3 0.7 1 1"/>
+
+        <!-- LEAF 4 -->
+        <geom name="leaf4_geom"
+              type="box"
+              pos="0.002 0 0.0036"
+              size="0.002 0.004 0.0006"
+              rgba="0.35 0.75 1 1"/>
+
+        <!-- TIP BODY FOR POINT LOAD -->
+        <body name="tip" pos="0.016 0 0">
+          <geom name="tip_geom"
+                type="sphere"
+                size="0.0008"
+                rgba="1 0 0 0.8"
+                contype="0"
+                conaffinity="0"/>
+          <site name="tip_site"
+                pos="0 0 0"
+                size="0.001"
+                rgba="1 0 0 1"/>
+        </body>
+
+      </body>
+
+    </body>
+
+  </worldbody>
+
+</mujoco>

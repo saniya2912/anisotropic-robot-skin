@@ -3,9 +3,10 @@
   <compiler angle="radian" autolimits="true"/>
 
   <default>
-    <geom friction="1 0.01 0.001" solref="0.01 1" solimp="0.95 0.99 0.001"/>
-    <joint damping="0.001" limited="true" range="-1.2 1.2"/>
-  </default>
+  <geom friction="1 0.01 0.001" solref="0.01 1" solimp="0.95 0.99 0.001"/>
+  <joint damping="0.01" limited="true" range="-1.2 1.2"/>
+</default>
+
 
   <worldbody>
     <geom name="ground" type="plane" size="2 2 0.1" rgba="0.95 0.95 0.95 1"/>

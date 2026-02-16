@@ -2,7 +2,7 @@ import time
 import mujoco
 import mujoco.viewer
 
-XML_PATH = "models/leafspring.xml"
+XML_PATH = "models/leafspring_final.xml"
 
 def main():
     model = mujoco.MjModel.from_xml_path(XML_PATH)
@@ -10,7 +10,7 @@ def main():
     dt = model.opt.timestep
 
     # Apply force to the TIP body (true point load at the correct location)
-    tip_body = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "tip")
+    tip_body = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "leaf1_tip")
     if tip_body < 0:
         raise RuntimeError("Body 'tip' not found. Did you add the tip body inside leaf1 in XML?")
 
@@ -23,7 +23,7 @@ def main():
     print("Initial tip position:", tip0)
 
     # Downward load (NEGATIVE z)
-    Fz = 0.05  # N (increase magnitude for more visible bend, e.g. -1.0)
+    Fz = 0.1  # N (increase magnitude for more visible bend, e.g. -1.0)
 
     # Let it settle under load
     settle_time = 3.0

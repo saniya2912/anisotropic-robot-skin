@@ -1,0 +1,156 @@
+<mujoco model="laminated_quarter_elliptic">
+
+  <option timestep="0.001" gravity="0 0 -9.81" integrator="implicitfast"/>
+  <compiler angle="radian"/>
+
+  <default>
+    <geom friction="1 0.01 0.001"
+          solref="0.01 1"
+          solimp="0.95 0.99 0.001"/>
+    <joint damping="0.02" limited="true" range="-1.0 1.0"/>
+  </default>
+
+  <worldbody>
+
+    <geom type="plane" size="2 2 0.1" rgba="0.95 0.95 0.95 1"/>
+
+    <body name="base" pos="0 0 0.03">
+      <geom type="box" size="0.003 0.01 0.005" rgba="0.2 0.2 0.2 1"/>
+
+      <!-- ========================= -->
+      <!-- LEAF 1 (8 segments) -->
+      <!-- ========================= -->
+      <body name="leaf1_root" pos="0 0 0.000">
+        <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+        <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+        <body pos="0.002 0 0">
+          <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+          <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+          <body pos="0.002 0 0">
+            <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+            <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+            <body pos="0.002 0 0">
+              <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+              <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+              <body pos="0.002 0 0">
+                <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+                <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+                <body pos="0.002 0 0">
+                  <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+                  <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+                  <body pos="0.002 0 0">
+                    <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+                    <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+                    <body name="leaf1_tip" pos="0.002 0 0">
+                      <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+                      <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+                      <site name="tip_site" pos="0.002 0 0"
+                            size="0.001" rgba="1 0 0 1"/>
+                    </body>
+
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- ========================= -->
+      <!-- LEAF 2 (6 segments) -->
+      <!-- ========================= -->
+      <body name="leaf2_root" pos="0 0 0.0012">
+        <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+        <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+        <body pos="0.002 0 0">
+          <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+          <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+          <body pos="0.002 0 0">
+            <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+            <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+            <body pos="0.002 0 0">
+              <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+              <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+              <body pos="0.002 0 0">
+                <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+                <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+                <body name="leaf2_tip" pos="0.002 0 0">
+                  <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+                  <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+                </body>
+
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- ========================= -->
+      <!-- LEAF 3 (5 segments) -->
+      <!-- ========================= -->
+      <body name="leaf3_root" pos="0 0 0.0024">
+        <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+        <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+        <body pos="0.002 0 0">
+          <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+          <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+          <body pos="0.002 0 0">
+            <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+            <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+            <body pos="0.002 0 0">
+              <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+              <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+              <body name="leaf3_tip" pos="0.002 0 0">
+                <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+                <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+              </body>
+
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- ========================= -->
+      <!-- LEAF 4 (4 segments) -->
+      <!-- ========================= -->
+      <body name="leaf4_root" pos="0 0 0.0036">
+        <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+        <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+        <body pos="0.002 0 0">
+          <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+          <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+          <body pos="0.002 0 0">
+            <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+            <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+
+            <body name="leaf4_tip" pos="0.002 0 0">
+              <joint type="hinge" axis="0 1 0" stiffness="0.02"/>
+              <geom type="box" pos="0.001 0 0" size="0.001 0.004 0.0006"/>
+            </body>
+
+          </body>
+        </body>
+      </body>
+
+    </body>
+
+  </worldbody>
+</mujoco>
